@@ -1,2 +1,3 @@
-rootProject.name = 'reactivedns'
+rootProject.name = 'reactive-dns'
+include 'lambda'
 

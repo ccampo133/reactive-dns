@@ -1,0 +1,65 @@
+buildscript {
+    ext {
+        kotlinVersion = "1.0.1"
+        awsLambdaCoreVersion = "1.1.0"
+        awsLambdaEventsVersion = "1.2.0"
+        awsLambdaLog4jVersion = "1.0.0"
+        awsPluginVersion = "0.28"
+        jetbrainsAnnotationsVersion = "13.0"
+        slf4jVersion = "1.7.21"
+        log4jVersion = "1.2.17"
+        jacksonVersion = "2.7.5"
+        mockitoVersion = "1.10.19"
+        junitVersion = "4.12"
+        assertJVersion = "3.4.1"
+        rxJavaVersion = "1.1.5"
+        guiceVersion = "4.1.0"
+        awsJavaSdkVersion = "1.11.9"
+    }
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
+    }
+}
+
+apply plugin: "java"
+apply plugin: "kotlin"
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
+    compile "com.google.inject:guice:$guiceVersion"
+    compile "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
+    compile "com.fasterxml.jackson.module:jackson-module-kotlin:$jacksonVersion"
+    compile "org.slf4j:slf4j-api:$slf4jVersion"
+    compile "org.slf4j:slf4j-log4j12:$slf4jVersion"
+    compile "log4j:log4j:$log4jVersion"
+
+    //AWS Libraries
+    compile "com.amazonaws:aws-lambda-java-core:$awsLambdaCoreVersion"
+    compile "com.amazonaws:aws-lambda-java-log4j:$awsLambdaLog4jVersion"
+    compile "com.amazonaws:aws-java-sdk-route53:$awsJavaSdkVersion"
+
+    testCompile "junit:junit:$junitVersion"
+    testCompile "org.mockito:mockito-core:$mockitoVersion"
+    testCompile "org.assertj:assertj-core:$assertJVersion"
+}
+
+jar {
+    baseName = "reactive-dns-lambda"
+    archivesBaseName = "reactive-dns-lambda"
+    manifest {
+        attributes("Implementation-Title": "ReactiveDNS Lambda", "Implementation-Version": version)
+    }
+    // Include all dependent libraries in the archive "lib" directory (fat jar).
+    into("lib") {
+        from configurations.runtime
+    }
+}
